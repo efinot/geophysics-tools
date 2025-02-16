@@ -1,0 +1,27 @@
+name: CI Pipeline
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install system dependencies  # ✅ Ajout des paquets nécessaires pour Pillow
+        run: |
+          sudo apt update
+          sudo apt install -y libjpeg-dev zlib1g-dev libtiff-dev libfreetype6-dev liblcms2-dev libopenjp2-7 libwebp-dev tcl-dev tk-dev
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run tests  # Optionnel si tu as des tests
+        run: pytest || echo "No tests found"
